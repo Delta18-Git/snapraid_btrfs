@@ -12,12 +12,10 @@ RUN url=$(curl -s https://api.github.com/repos/amadvance/snapraid/releases/lates
         | grep '"browser_download_url":.*snapraid.*tar.gz"' \
         | head -n 1 \
         | cut -d '"' -f 4); \
-    wget -O snapraid.tar.gz "$url"; \
-    tar xzvf snapraid.tar.gz; \
-    rm snapraid.tar.gz
+    wget -O snapraid.tar.gz "$url";
 #extract
-RUN tar xzvf snapraid-*.tar.gz && \
-    rm snapraid-*.tar.gz
+RUN tar xzvf snapraid.tar.gz; \
+    rm snapraid.tar.gz
 #compile and check
 RUN cd snapraid-* && \
     ./configure --prefix=/usr --sysconfdir=/etc --mandir=/usr/share/man --localstatedir=/var && \
