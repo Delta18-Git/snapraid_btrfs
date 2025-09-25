@@ -8,14 +8,14 @@ RUN apk add snapper --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testi
 RUN rm -rf /var/cache/apk/*
 
 #download latest snapraid
-RUN curl -s https://api.github.com/repos/amadvance/snapraid/releases/latest \
-    | grep "browser.*snapraid.*tar.gz" \
-    | cut -d : -f 2,3 \
-    | tr -d \" \
-    | wget -qi -
+RUN url=$(curl -s https://api.github.com/repos/amadvance/snapraid/releases/latest \
+        | grep '"browser_download_url":.*snapraid.*tar.gz"' \
+        | head -n 1 \
+        | cut -d '"' -f 4); \
+    wget -O snapraid.tar.gz "$url";
 #extract
-RUN tar xzvf snapraid-*.tar.gz && \
-    rm snapraid-*.tar.gz
+RUN tar xzvf snapraid.tar.gz; \
+    rm snapraid.tar.gz
 #compile and check
 RUN cd snapraid-* && \
     ./configure --prefix=/usr --sysconfdir=/etc --mandir=/usr/share/man --localstatedir=/var && \
